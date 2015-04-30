@@ -17,10 +17,10 @@ function proto.configure(args)
 
 	local ipv4, ipv6 = network.primary_address()
 	local localAS = 97922
-	local bgpPeers = {{"10.1.152.10", 37922}}
+	local bgpPeers = {{ip="10.1.152.10", as=37922}}
 
 	local base_template = [[
-router id ${1};
+router id $1;
 
 protocol kernel {
 	learn;
@@ -34,12 +34,12 @@ protocol bgp {
 	import all;
 	export all;
 
-	local as ${localAS};
-	neighbor ${1} as ${2};
+	local as $localAS;
+	neighbor $1 as $2;
 }
 ]]
 
-	for peer in pairs(bgpPeers) do
+	for _,peer in pairs(bgpPeers) do
 		base_template = base_template .. utils.expandVars(peer_template, peer)
 	end
 
